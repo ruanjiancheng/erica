@@ -595,92 +595,50 @@ void parse_fun() {
     }
 }
 
-// void parse() {
-//     int type, base_type;
-//     int *p;
-//     line = 1;
-//     token = 1;
-//     while (token > 0) {
-//         tokenize();
-//         // parse enum
-//         if (token == Enum) {
-//             assert(Enum);
-//             if (token != '{') 
-//                 assert(Id); // skip enum name
-//             assert('{');
-//             parse_enum();
-//             assert('}');
-//         }
-//         // parse identifer or function
-//         else if (token == Int || token == Char) {
-//             base_type = parse_base_type();
-//             while (token != ';' && token != '}') {
-//                 type = base_type;
-//                 // parse pointer
-//                 while (token == Mul) {
-//                     assert(Mul);
-//                     type = type + PTR;
-//                 }
-//                 check_new_id();
-//                 assert(Id);
-//                 symbol_ptr[Type] = type;
-//                 // function
-//                 if (token == '(') {
-//                     symbol_ptr[Class] = Fun;
-//                     symbol_ptr[Value] = (int)(code + 1);
-//                     assert('('); parse_param(); assert(')');
-//                     parse_fun();
-//                 }
-//                 else {
-//                     // variable
-//                     symbol_ptr[Class] = Glo;
-//                     symbol_ptr[Value] = (int)data;
-//                     data = data + 8; // keep 64 bits for each var
-//                 }
-//                 if (token == ',')
-//                     assert(',');
-//             }
-//         }
-//     }
-// }
-
 void parse() {
     int type, base_type;
-    int* p;
-    line = 1; token = 1; // just for loop condition
+    int *p;
+    line = 1;
+    token = 1;
     while (token > 0) {
-        tokenize(); // start or skip last ; | }
+        tokenize();
         // parse enum
         if (token == Enum) {
             assert(Enum);
-            if (token != '{') assert(Id); // skip enum name
+            if (token != '{') 
+                assert(Id); // skip enum name
             assert('{'); parse_enum(); assert('}');
-        } else if (token == Int || token == Char) {
+        }
+        // parse identifer or function
+        else if (token == Int || token == Char) {
             base_type = parse_base_type();
-            // parse var or func definition
             while (token != ';' && token != '}') {
-                // parse pointer's star
                 type = base_type;
-                while (token == Mul) {assert(Mul); type = type + PTR;}
+                // parse pointer
+                while (token == Mul) {
+                    assert(Mul);
+                    type = type + PTR;
+                }
                 check_new_id();
                 assert(Id);
                 symbol_ptr[Type] = type;
+                // function
                 if (token == '(') {
-                    // function
                     symbol_ptr[Class] = Fun;
                     symbol_ptr[Value] = (int)(code + 1);
-                    assert('('); parse_param(); assert(')'); assert('{');
+                    assert('('); parse_param(); assert(')');assert('{');
                     parse_fun();
-                } else {
+                }
+                else {
                     // variable
                     symbol_ptr[Class] = Glo;
                     symbol_ptr[Value] = (int)data;
                     data = data + 8; // keep 64 bits for each var
                 }
-                // handle int a,b,c;
-                if (token == ',') assert(',');
+                if (token == ',')
+                    assert(',');
             }
-        }  
+        }
     }
 }
 
