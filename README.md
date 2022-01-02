@@ -7,3 +7,13 @@
 2. enum 类型解析
 3. 函数解析
 
+```xml
+|   erica.c
+|   note.md
+|   README.md
+|
+\---example
+        function_call.c
+        hello.c
+```
+
